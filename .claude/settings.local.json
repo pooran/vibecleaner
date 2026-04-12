@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(date -Iseconds)",
+      "Bash(echo \"[$\\(date -Iseconds\\)] | $\\(pwd\\) | Writing implementation plan for VibeCleaner \\(GUI + CLI\\)\")",
+      "Bash(mkdir -p /Users/pooran/Downloads/Com/N/delete/docs/superpowers/plans)"
+    ]
+  }
+}
