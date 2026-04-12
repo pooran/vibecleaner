@@ -25,9 +25,7 @@ These projects aren't dead. They're *resting*. They just happen to have 3 GB of 
 **The GitHub Graveyard is real.** 
 !(https://myoctocat.com/assets/images/base-octocat.svg)
 
-
-[image https://i.programmerhumor.io/2026/04/5ab8b77f921732cc6660fc3e323714fd90af8f9d444200a98aa31f8d2b8e6238.jpeg]
-
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://i.programmerhumor.io/2026/04/5ab8b77f921732cc6660fc3e323714fd90af8f9d444200a98aa31f8d2b8e6238.jpeg)
 See: [programmerhumor.io/memes/github-graveyard](https://programmerhumor.io/memes/github-graveyard)
 
 The rule of the graveyard: thou shalt never delete a project, for you might finish it someday. But also thou shalt never actually finish it.
