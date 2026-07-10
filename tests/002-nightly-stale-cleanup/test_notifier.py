@@ -172,6 +172,19 @@ def test_notify_macos_falls_back_to_osascript_when_terminal_notifier_missing(mon
     assert calls[0][0] == "osascript"
 
 
+def test_history_browser_frame_auto_selects_first_row():
+    """HistoryBrowserFrame must select the first tree row (most recent session,
+    since History.load_all() sorts newest-first) right after building the tree,
+    so clicking a notification shows the latest report without an extra click."""
+    import inspect
+    import vibecleaner as vc
+    source = inspect.getsource(vc.HistoryBrowserFrame.__init__)
+    tree_assignment_idx = source.index("self._tree = tree")
+    remainder = source[tree_assignment_idx:]
+    assert "selection_set" in remainder
+    assert "get_children()[0]" in remainder or "get_children()[0:1]" in remainder
+
+
 def test_notify_macos_terminal_notifier_failure_does_not_propagate(monkeypatch):
     """If terminal-notifier is available but subprocess.run raises, send() returns False, never raises."""
     import shutil

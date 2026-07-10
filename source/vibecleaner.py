@@ -1821,6 +1821,12 @@ class HistoryBrowserFrame:
 
         self._tree = tree
 
+        # Auto-select the most recent session so clicking a notification
+        # (which launches --show-history) shows the latest report immediately.
+        if tree.get_children():
+            tree.selection_set(tree.get_children()[0])
+            tree.see(tree.get_children()[0])
+
     def destroy(self):
         self._root.destroy()
 
