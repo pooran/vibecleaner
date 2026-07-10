@@ -94,3 +94,69 @@ def test_send_subprocess_error_does_not_propagate(monkeypatch):
     n = Notifier()
     result = n.send("VibeCleaner", "Some message")
     assert result is False
+
+
+def test_notify_macos_uses_terminal_notifier_when_available(monkeypatch):
+    """When terminal-notifier is on PATH, send() should invoke it with -execute."""
+    import shutil
+    import subprocess
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(shutil, "which", lambda name: "/usr/local/bin/terminal-notifier" if name == "terminal-notifier" else None)
+
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        return subprocess.CompletedProcess(cmd, 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    n = Notifier()
+    result = n.send("VibeCleaner", "Cleaned 3 folders")
+
+    assert result is True
+    assert len(calls) == 1
+    cmd = calls[0]
+    assert cmd[0] == "terminal-notifier"
+    assert "-execute" in cmd
+    execute_idx = cmd.index("-execute")
+    assert "--show-history" in cmd[execute_idx + 1]
+
+
+def test_notify_macos_falls_back_to_osascript_when_terminal_notifier_missing(monkeypatch):
+    """When terminal-notifier is NOT on PATH, send() must use the existing osascript path unchanged."""
+    import shutil
+    import subprocess
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(shutil, "which", lambda name: None)
+
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        return subprocess.CompletedProcess(cmd, 0)
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    n = Notifier()
+    result = n.send("VibeCleaner", "Cleaned 3 folders")
+
+    assert result is True
+    assert len(calls) == 1
+    assert calls[0][0] == "osascript"
+
+
+def test_notify_macos_terminal_notifier_failure_does_not_propagate(monkeypatch):
+    """If terminal-notifier is available but subprocess.run raises, send() returns False, never raises."""
+    import shutil
+    import subprocess
+    monkeypatch.setattr(sys, "platform", "darwin")
+    monkeypatch.setattr(shutil, "which", lambda name: "/usr/local/bin/terminal-notifier" if name == "terminal-notifier" else None)
+    monkeypatch.setattr(
+        subprocess, "run",
+        lambda *a, **kw: (_ for _ in ()).throw(OSError("boom")),
+    )
+
+    n = Notifier()
+    result = n.send("VibeCleaner", "Some message")
+    assert result is False

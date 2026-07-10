@@ -16,6 +16,7 @@ import json
 import logging
 import logging.handlers
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -2528,6 +2529,27 @@ class Notifier:
         # Escape double quotes to prevent script injection
         safe_title = title.replace('"', '\\"')
         safe_msg = message.replace('"', '\\"')
+
+        terminal_notifier = shutil.which("terminal-notifier")
+        if terminal_notifier:
+            try:
+                script_path = os.path.abspath(sys.argv[0])
+                execute_cmd = f'{shlex.quote(sys.executable)} {shlex.quote(script_path)} --show-history'
+                subprocess.run(
+                    [
+                        "terminal-notifier",
+                        "-title", title,
+                        "-message", message,
+                        "-execute", execute_cmd,
+                    ],
+                    check=False, timeout=5,
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                )
+                return True
+            except (OSError, subprocess.TimeoutExpired) as e:
+                logging.warning("Notifier macOS (terminal-notifier): %s", e)
+                return False
+
         script = f'display notification "{safe_msg}" with title "{safe_title}"'
         try:
             subprocess.run(
