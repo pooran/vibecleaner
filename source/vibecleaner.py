@@ -3109,6 +3109,10 @@ def main():
     import sys
     if "--run-scheduled" in sys.argv:
         sys.exit(scheduled_main())
+    elif "--show-history" in sys.argv:
+        app = GuiApp()
+        app.show_frame("HistoryBrowserFrame")
+        app._root.mainloop()
     elif len(sys.argv) > 1:
         cli_main()
     else:

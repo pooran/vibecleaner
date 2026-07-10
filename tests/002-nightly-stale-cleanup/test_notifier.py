@@ -96,6 +96,32 @@ def test_send_subprocess_error_does_not_propagate(monkeypatch):
     assert result is False
 
 
+def test_main_recognizes_show_history_flag(monkeypatch):
+    """--show-history must route to GuiApp with HistoryBrowserFrame, not WelcomeFrame."""
+    import vibecleaner as vc
+
+    calls = []
+
+    class FakeApp:
+        def __init__(self):
+            calls.append("init")
+
+        def show_frame(self, name, **kwargs):
+            calls.append(("show_frame", name))
+
+        class _root:
+            @staticmethod
+            def mainloop():
+                calls.append("mainloop")
+
+    monkeypatch.setattr(vc, "GuiApp", FakeApp)
+    monkeypatch.setattr(sys, "argv", ["vibecleaner.py", "--show-history"])
+
+    vc.main()
+
+    assert ("show_frame", "HistoryBrowserFrame") in calls
+
+
 def test_notify_macos_uses_terminal_notifier_when_available(monkeypatch):
     """When terminal-notifier is on PATH, send() should invoke it with -execute."""
     import shutil
