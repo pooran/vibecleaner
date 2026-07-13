@@ -83,6 +83,8 @@ We speak fluent abandoned project in 30+ languages:
 
 **macOS**: [Download VibeCleaner.dmg](https://github.com/pooran/vibecleaner/releases/latest/download/VibeCleaner.dmg) — unzip, drag into Applications. Unsigned build: right-click → Open on first launch to bypass Gatekeeper.
 
+**Windows**: [Download VibeCleaner-Setup.exe](https://github.com/pooran/vibecleaner/releases/latest/download/VibeCleaner-Setup.exe) — run the installer and follow the prompts.
+
 ## How to Run
 
 ### Requirements
