@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build onedir bundle
+        run: >
+          pyinstaller --name VibeCleaner --windowed --onedir --noconfirm
+          --distpath dist --workpath build source/vibecleaner.py
+
+      - name: Determine version
+        shell: bash
+        run: echo "VIBECLEANER_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: Build installer with Inno Setup
+        run: |
+          iscc packaging\windows\vibecleaner.iss
+
+      - name: Upload installer to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/VibeCleaner-Setup.exe
