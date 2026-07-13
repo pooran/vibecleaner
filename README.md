@@ -75,6 +75,10 @@ We speak fluent abandoned project in 30+ languages:
 
 ---
 
+## Download
+
+**macOS**: [Download VibeCleaner.dmg](https://github.com/pooran/vibecleaner/releases/latest/download/VibeCleaner.dmg) — unzip, drag into Applications. Unsigned build: right-click → Open on first launch to bypass Gatekeeper.
+
 ## How to Run
 
 ### Requirements
